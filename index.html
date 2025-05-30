@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QC Team - Transcript Analyzer (ENG ver.)</title>
+    <style>
+        :root {
+            --dark: #222831;
+            --dark-gray: #393E46;
+            --primary: #00ADB5;
+            --light: #EEEEEE;
+            --danger: #FF2E63;
+            --success: #00ADB5;
+            --warning: #FFC93C;
+        }
+        
+        body {
+        background-image: url('https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #222831 0%, #393E46 100%);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(238, 238, 238, 0.1);
+            margin: -25px -25px 2rem -25px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        h1 {
+            color: #EEEEEE;
+            text-align: center;
+            margin-bottom: 0;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: inline-block;
+            padding: 0 30px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #00ADB5;
+            border-radius: 3px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        textarea:focus {
+            border-color: #00ADB5;
+            box-shadow: 0 0 0 3px rgba(0, 173, 181, 0.2), 
+                        inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            outline: none;
+        }
+        
+        .btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            background-color: #008a91;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:hover:after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(25, 25);
+                opacity: 0;
+            }
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .btn.analyzing i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .file-upload {
+            display: none;
+        }
+        
+        .file-upload-label {
+            background-color: var(--dark-gray);
+            color: var(--light);
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px dashed #393E46;
+            text-align: center;
+        }
+        
+        .file-upload-label:hover {
+            background-color: #2d3238;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: #00ADB5;
+            background: rgba(0, 173, 181, 0.05);
+        }
+        
+        .file-upload-label.drag-over {
+            border-color: #00ADB5;
+            background: rgba(0, 173, 181, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .results-container {
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .summary-card {
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            color: var(--light);
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            min-width: 120px;
+            position: relative;
+        }
+        
+        .stat-box:not(:last-child):after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 40px;
+            width: 1px;
+            background: rgba(238, 238, 238, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .stat-value:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 2px;
+            background: #00ADB5;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: rgba(238, 238, 238, 0.8);
+        }
+        
+        .risk-list {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .risk-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            --i: 0;
+            transition-delay: calc(var(--i) * 0.05s);
+        }
+        
+        .risk-item:not(:last-child):after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 60px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(57, 62, 70, 0.2), rgba(57, 62, 70, 0.05));
+        }
+        
+        .risk-item:hover {
+            background-color: rgba(0, 173, 181, 0.05);
+        }
+        
+        .risk-item.checked {
+            background-color: rgba(0, 173, 181, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .risk-item.checked:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+        
+        .risk-icon {
+            margin-right: 15px;
+            font-size: 20px;
+            min-width: 24px;
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .risk-icon i {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .risk-icon .checked-icon {
+            opacity: 0;
+            transform: scale(0) rotate(-90deg);
+            color: var(--primary);
+        }
+        
+        .risk-item.checked .risk-icon .material-icons:first-child {
+            opacity: 0;
+            transform: scale(0) rotate(90deg);
+        }
+        
+        .risk-item.checked .risk-icon .checked-icon {
+            opacity: 1;
+            transform: scale(1) rotate(0);
+            animation: checkBounce 0.6s ease;
+        }
+        
+        @keyframes checkBounce {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.3); }
+            50% { transform: scale(0.9); }
+            70% { transform: scale(1.1); }
+        }
+        
+        .risk-item:hover .risk-icon i {
+            transform: scale(1.2);
+        }
+        
+        .risk-item.checked:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(0, 173, 181, 0.3);
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            opacity: 0;
+        }
+        
+        .risk-item.checked:after {
+            animation: ripple 0.6s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .risk-content {
+            flex: 1;
+        }
+        
+        .risk-phrase {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--danger);
+            transition: color 0.2s;
+        }
+        
+        .risk-item.checked .risk-phrase {
+            color: var(--primary);
+        }
+        
+        .risk-context {
+            font-size: 14px;
+            color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+        }
+        
+        .risk-time {
+            background: rgba(0, 173, 181, 0.1);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+            margin-left: 8px;
+        }
+        
+        .risk-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+        
+        .risk-item.checked .risk-progress {
+            width: 100%;
+        }
+        
+        .no-risks {
+            padding: 30px;
+            text-align: center;
+            color: var(--primary);
+            font-size: 18px;
+        }
+        
+        .no-risks i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 206, 86, 0.3);
+            padding: 2px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 2px;
+        }
+        
+        .highlight:hover {
+            background-color: rgba(255, 206, 86, 0.5);
+        }
+        
+        .highlight.active {
+            background-color: rgba(255, 206, 86, 0.7);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { background-color: rgba(255, 206, 86, 0.7); }
+            50% { background-color: rgba(255, 206, 86, 0.4); }
+            100% { background-color: rgba(255, 206, 86, 0.7); }
+        }
+        
+        .copy-btn {
+            background: var(--dark-gray);
+            color: var(--light);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: all 0.2s;
+        }
+        
+        .file-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .file-item.active {
+            background-color: rgba(0, 173, 181, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .file-name {
+            flex: 1;
+            margin-left: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-remove {
+            color: var(--dark-gray);
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+        
+        .file-remove:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            opacity: 0;
+            z-index: 100;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .completion-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+            display: none;
+        }
+        
+        @keyframes slideDown {
+            from { top: -50px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .stat-box {
+                min-width: 50%;
+            }
+            
+            .stat-box:not(:last-child):after {
+                display: none;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn, .file-upload-label {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QC Team - Transcript Analyzer (Korean ver.)</h1>
+        </div>
+        
+        <div>
+            <textarea id="transcriptInput" placeholder="Paste your conversation transcript here...&#10;Example format:&#10;&#10;[09:30:00 - 09:31:00] Hello, trust me this is risk free!&#10;[09:31:00 - 09:32:00] We can meet in London."></textarea>
+            
+            <div class="controls">
+                <div>
+                    <input type="file" id="fileUpload" accept=".txt,.csv" class="file-upload" multiple>
+                    <label for="fileUpload" class="file-upload-label" id="fileUploadLabel">
+                        <i class="material-icons">upload</i> Upload Transcript(s)
+                    </label>
+                </div>
+                <button class="btn" onclick="analyzeTranscript()">
+                    <i class="material-icons">search</i> Analyze Transcript
+                </button>
+            </div>
+            
+            <div id="fileList" class="file-list" style="display: none;">
+                <h3 style="margin-top: 0; margin-bottom: 10px;">Uploaded Files</h3>
+                <div id="fileItems"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="resultsContainer" class="results-container" style="display: none;">
+        <div class="container">
+            <div class="summary-card">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalRisks">0</div>
+                    <div class="stat-label">Total Risks Found</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="uniqueRisks">0</div>
+                    <div class="stat-label">Unique Risk Types</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="firstRiskTime">--:--:--</div>
+                    <div class="stat-label">First Risk At</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="lastRiskTime">--:--:--</div>
+                    <div class="stat-label">Last Risk At</div>
+                </div>
+            </div>
+            
+            <div class="risk-list" id="riskList">
+                <!-- Risks will be inserted here -->
+            </div>
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="copy-btn" onclick="copyResults()">
+                    <i class="material-icons">content_copy</i> Copy Results
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="completion-message" id="completionMessage">
+        <i class="material-icons" style="vertical-align: middle;">celebration</i>
+        All risks reviewed! Great job!
+    </div>
+
+    <audio id="checkSound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3"></audio>
+
+    <script>
+        // Enhanced risk phrases list
+        const riskyPhrases = [
+  "사무실",
+  "은행",
+  "커미션",
+  "출금",
+  "안전하게",
+  "수익",
+  "미국",
+  "마음에 드시면",
+  "마음에 안 드시면",
+  "125달러를 사용하고",
+  "125달러 선물로 들릴 겁니다",
+  "회사 이익이예요",
+  "민국에서 우리 회사 사무실이 있었어요",
+  "두바이에 사무실",
+  "수익이 생길 수 있어요",
+  "수익을 얻으시는 있고",
+  "위험성이 없는"
+];
+
+        
+        // Store uploaded files and their content
+        const uploadedFiles = [];
+        let currentFileIndex = 0;
+        const checkSound = document.getElementById('checkSound');
+        const completionMessage = document.getElementById('completionMessage');
+        
+        // Initialize file upload
+        document.getElementById('fileUpload').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedFiles.push({
+                        name: file.name,
+                        content: event.target.result,
+                        risks: [],
+                        checkedRisks: [] // Track which risks have been checked
+                    });
+                    
+                    if (index === files.length - 1) {
+                        updateFileList();
+                        if (uploadedFiles.length === files.length) {
+                            // Automatically load first file
+                            loadFile(0);
+                        }
+                    }
+                };
+                reader.readAsText(file);
+            });
+        });
+        
+        // Drag and drop functionality
+        const fileUploadLabel = document.getElementById('fileUploadLabel');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUploadLabel.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            fileUploadLabel.classList.add('drag-over');
+        }
+        
+        function unhighlight() {
+            fileUploadLabel.classList.remove('drag-over');
+        }
+        
+        fileUploadLabel.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('fileUpload').files = files;
+            const event = new Event('change');
+            document.getElementById('fileUpload').dispatchEvent(event);
+        }
+        
+        function updateFileList() {
+            const fileItems = document.getElementById('fileItems');
+            fileItems.innerHTML = '';
+            
+            if (uploadedFiles.length === 0) {
+                document.getElementById('fileList').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('fileList').style.display = 'block';
+            
+            uploadedFiles.forEach((file, index) => {
+                const fileElement = document.createElement('div');
+                fileElement.className = `file-item ${index === currentFileIndex ? 'active' : ''}`;
+                fileElement.innerHTML = `
+                    <i class="material-icons">description</i>
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-remove" onclick="removeFile(${index}, event)">
+                        <i class="material-icons">close</i>
+                    </div>
+                `;
+                fileElement.onclick = () => loadFile(index);
+                fileItems.appendChild(fileElement);
+            });
+        }
+        
+        function loadFile(index) {
+            if (index < 0 || index >= uploadedFiles.length) return;
+            
+            currentFileIndex = index;
+            document.getElementById('transcriptInput').value = uploadedFiles[index].content;
+            updateFileList();
+            
+            // Load checked state from local storage
+            loadCheckedState();
+            
+            // Auto-analyze if risks were previously found
+            if (uploadedFiles[index].risks.length > 0) {
+                showResultsForFile(index);
+            } else {
+                document.getElementById('resultsContainer').style.display = 'none';
+            }
+        }
+        
+        function loadCheckedState() {
+            if (uploadedFiles.length > 0) {
+                const fileData = uploadedFiles[currentFileIndex];
+                const savedData = localStorage.getItem(`checkedRisks_${fileData.name}`);
+                if (savedData) {
+                    fileData.checkedRisks = JSON.parse(savedData);
+                }
+            }
+        }
+        
+        function saveCheckedState() {
+            if (uploadedFiles.length > 0) {
+                const fileData = uploadedFiles[currentFileIndex];
+                localStorage.setItem(`checkedRisks_${fileData.name}`, JSON.stringify(fileData.checkedRisks));
+            }
+        }
+        
+        function removeFile(index, event) {
+            event.stopPropagation();
+            // Remove saved state from local storage
+            if (uploadedFiles[index]) {
+                localStorage.removeItem(`checkedRisks_${uploadedFiles[index].name}`);
+            }
+            uploadedFiles.splice(index, 1);
+            
+            if (currentFileIndex >= index) {
+                currentFileIndex = Math.max(0, currentFileIndex - 1);
+            }
+            
+            if (uploadedFiles.length > 0) {
+                loadFile(currentFileIndex);
+            } else {
+                document.getElementById('transcriptInput').value = '';
+                document.getElementById('fileList').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'none';
+            }
+            
+            updateFileList();
+        }
+        
+        function analyzeTranscript() {
+            const btn = document.querySelector('.btn');
+            btn.classList.add('analyzing');
+            
+            const transcript = document.getElementById('transcriptInput').value.trim();
+            const resultsContainer = document.getElementById('resultsContainer');
+            const riskList = document.getElementById('riskList');
+            
+            if (!transcript) {
+                alert('Please paste or upload a transcript first');
+                btn.classList.remove('analyzing');
+                return;
+            }
+            
+            // Reset UI
+            riskList.innerHTML = '';
+            resultsContainer.style.display = 'none';
+            
+            // Case-insensitive regex search
+            const riskyRegex = new RegExp(riskyPhrases.join("|"), "gi");
+            const matches = [...transcript.matchAll(riskyRegex)];
+            
+            // Find timestamps if they exist
+            const timeRegex = /\[(\d{1,2}:\d{2}:\d{2})\s*-\s*\d{1,2}:\d{2}:\d{2}\]/g;
+            const timeMatches = [...transcript.matchAll(timeRegex)];
+            const timePositions = timeMatches.map(match => ({
+                time: match[1],
+                index: match.index
+            }));
+            
+            // Process matches
+            if (matches.length === 0) {
+                riskList.innerHTML = `
+                    <div class="no-risks">
+                        <i class="material-icons">check_circle</i>
+                        <div>No risky phrases detected in this transcript</div>
+                    </div>
+                `;
+                document.getElementById('totalRisks').textContent = '0';
+                document.getElementById('uniqueRisks').textContent = '0';
+                document.getElementById('firstRiskTime').textContent = '--:--:--';
+                document.getElementById('lastRiskTime').textContent = '--:--:--';
+                resultsContainer.style.display = 'block';
+                
+                // Store empty risks for this file
+                if (uploadedFiles.length > 0) {
+                    uploadedFiles[currentFileIndex].risks = [];
+                    uploadedFiles[currentFileIndex].checkedRisks = [];
+                    saveCheckedState();
+                }
+                
+                btn.classList.remove('analyzing');
+                return;
+            }
+            
+            // Process and deduplicate matches
+            const uniquePhrases = new Set();
+            const riskItems = [];
+            let firstTime = null;
+            let lastTime = null;
+            
+            matches.forEach((match, matchIndex) => {
+                const phrase = match[0].toLowerCase();
+                const phraseIndex = match.index;
+                let foundTime = null;
+                
+                // Find the most recent timestamp before this phrase
+                for (let i = timePositions.length - 1; i >= 0; i--) {
+                    if (timePositions[i].index < phraseIndex) {
+                        foundTime = timePositions[i].time;
+                        if (!firstTime) firstTime = foundTime;
+                        lastTime = foundTime;
+                        break;
+                    }
+                }
+                
+                uniquePhrases.add(phrase);
+                riskItems.push({
+                    phrase: match[0], // Original case
+                    time: foundTime,
+                    index: phraseIndex,
+                    matchIndex: matchIndex
+                });
+            });
+            
+            // Sort by position in transcript
+            riskItems.sort((a, b) => a.index - b.index);
+            
+            // Store risks for this file
+            if (uploadedFiles.length > 0) {
+                uploadedFiles[currentFileIndex].risks = riskItems;
+                // Initialize checkedRisks array if it doesn't exist
+                if (!uploadedFiles[currentFileIndex].checkedRisks) {
+                    uploadedFiles[currentFileIndex].checkedRisks = [];
+                }
+                saveCheckedState();
+            }
+            
+            // Generate risk list HTML
+            riskItems.forEach((item, itemIndex) => {
+                const riskElement = document.createElement('div');
+                riskElement.className = 'risk-item';
+                riskElement.style.setProperty('--i', itemIndex);
+                
+                if (uploadedFiles.length > 0 && uploadedFiles[currentFileIndex].checkedRisks.includes(itemIndex)) {
+                    riskElement.classList.add('checked');
+                }
+                
+                riskElement.innerHTML = `
+                    <div class="risk-icon">
+                        <i class="material-icons">warning</i>
+                        <i class="material-icons checked-icon">check_circle</i>
+                    </div>
+                    <div class="risk-content">
+                        <div class="risk-phrase">${item.phrase}</div>
+                        <div class="risk-context">
+                            Found in transcript
+                            ${item.time ? `<span class="risk-time">${item.time}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="risk-progress"></div>
+                `;
+                
+                riskElement.onclick = () => {
+                    highlightRiskInText(item.matchIndex);
+                    // Toggle checked state
+                    riskElement.classList.toggle('checked');
+                    // Play sound
+                    checkSound.currentTime = 0;
+                    checkSound.play();
+                    // Update the checkedRisks array for this file
+                    if (uploadedFiles.length > 0) {
+                        const checkedIndex = uploadedFiles[currentFileIndex].checkedRisks.indexOf(itemIndex);
+                        if (checkedIndex === -1) {
+                            uploadedFiles[currentFileIndex].checkedRisks.push(itemIndex);
+                        } else {
+                            uploadedFiles[currentFileIndex].checkedRisks.splice(checkedIndex, 1);
+                        }
+                        saveCheckedState();
+                        checkAllRisksCompleted();
+                    }
+                };
+                
+                riskList.appendChild(riskElement);
+            });
+            
+            // Update summary stats
+            document.getElementById('totalRisks').textContent = matches.length;
+            document.getElementById('uniqueRisks').textContent = uniquePhrases.size;
+            document.getElementById('firstRiskTime').textContent = firstTime || '--:--:--';
+            document.getElementById('lastRiskTime').textContent = lastTime || '--:--:--';
+            
+            // Highlight risks in original text
+            highlightRisksInTranscript(riskItems);
+            
+            // Show results
+            resultsContainer.style.display = 'block';
+            btn.classList.remove('analyzing');
+        }
+        
+        function checkAllRisksCompleted() {
+            const totalRisks = document.querySelectorAll('.risk-item').length;
+            const checkedRisks = document.querySelectorAll('.risk-item.checked').length;
+            
+            if (totalRisks > 0 && totalRisks === checkedRisks) {
+                createConfetti();
+                showCompletionMessage();
+            }
+        }
+        
+        function createConfetti() {
+            const container = document.querySelector('.risk-list');
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = `hsl(${Math.random() * 60 + 150}, 80%, 60%)`;
+                confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        function showCompletionMessage() {
+            completionMessage.style.display = 'block';
+            setTimeout(() => {
+                completionMessage.style.display = 'none';
+            }, 3000);
+        }
+        
+        function showResultsForFile(fileIndex) {
+            const riskItems = uploadedFiles[fileIndex].risks;
+            const riskList = document.getElementById('riskList');
+            
+            riskList.innerHTML = '';
+            
+            if (riskItems.length === 0) {
+                riskList.innerHTML = `
+                    <div class="no-risks">
+                        <i class="material-icons">check_circle</i>
+                        <div>No risky phrases detected in this transcript</div>
+                    </div>
+                `;
+            } else {
+                riskItems.forEach((item, itemIndex) => {
+                    const riskElement = document.createElement('div');
+                    riskElement.className = 'risk-item';
+                    riskElement.style.setProperty('--i', itemIndex);
+                    
+                    if (uploadedFiles[fileIndex].checkedRisks.includes(itemIndex)) {
+                        riskElement.classList.add('checked');
+                    }
+                    
+                    riskElement.innerHTML = `
+                        <div class="risk-icon">
+                            <i class="material-icons">warning</i>
+                            <i class="material-icons checked-icon">check_circle</i>
+                        </div>
+                        <div class="risk-content">
+                            <div class="risk-phrase">${item.phrase}</div>
+                            <div class="risk-context">
+                                Found in transcript
+                                ${item.time ? `<span class="risk-time">${item.time}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="risk-progress"></div>
+                    `;
+                    
+                    riskElement.onclick = () => {
+                        highlightRiskInText(item.matchIndex);
+                        // Toggle checked state
+                        riskElement.classList.toggle('checked');
+                        // Play sound
+                        checkSound.currentTime = 0;
+                        checkSound.play();
+                        // Update the checkedRisks array for this file
+                        const checkedIndex = uploadedFiles[fileIndex].checkedRisks.indexOf(itemIndex);
+                        if (checkedIndex === -1) {
+                            uploadedFiles[fileIndex].checkedRisks.push(itemIndex);
+                        } else {
+                            uploadedFiles[fileIndex].checkedRisks.splice(checkedIndex, 1);
+                        }
+                        saveCheckedState();
+                        checkAllRisksCompleted();
+                    };
+                    
+                    riskList.appendChild(riskElement);
+                });
+            }
+            
+            // Update summary stats
+            document.getElementById('totalRisks').textContent = riskItems.length;
+            document.getElementById('uniqueRisks').textContent = new Set(riskItems.map(item => item.phrase.toLowerCase())).size;
+            document.getElementById('firstRiskTime').textContent = riskItems[0]?.time || '--:--:--';
+            document.getElementById('lastRiskTime').textContent = riskItems[riskItems.length - 1]?.time || '--:--:--';
+            
+            // Highlight risks in original text
+            highlightRisksInTranscript(riskItems);
+            
+            // Show results
+            document.getElementById('resultsContainer').style.display = 'block';
+        }
+        
+        function highlightRisksInTranscript(riskItems) {
+            const textarea = document.getElementById('transcriptInput');
+            const text = textarea.value;
+            const regex = new RegExp(riskyPhrases.join("|"), "gi");
+            
+            // Remove any existing highlight container
+            const existingHighlight = document.getElementById('highlightContainer');
+            if (existingHighlight) {
+                existingHighlight.remove();
+            }
+            
+            // Create a document fragment to work with
+            const fragment = document.createElement('div');
+            let lastIndex = 0;
+            const matches = [...text.matchAll(regex)];
+            
+            matches.forEach((match, matchIndex) => {
+                // Add text before match
+                fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                
+                // Add highlighted match
+                const highlight = document.createElement('span');
+                highlight.className = 'highlight';
+                highlight.textContent = match[0];
+                highlight.onclick = () => {
+                    // Remove active class from all highlights
+                    document.querySelectorAll('.highlight').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    // Add active class to clicked highlight
+                    highlight.classList.add('active');
+                    
+                    // Find corresponding risk item and scroll to it
+                    const riskItem = document.querySelectorAll('.risk-item')[matchIndex];
+                    if (riskItem) {
+                        riskItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        // Flash the risk item
+                        riskItem.style.backgroundColor = 'rgba(0, 173, 181, 0.2)';
+                        setTimeout(() => {
+                            riskItem.style.backgroundColor = '';
+                        }, 2000);
+                    }
+                };
+                fragment.appendChild(highlight);
+                
+                lastIndex = match.index + match[0].length;
+            });
+            
+            // Add remaining text
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+            
+            // Only update if we actually made changes
+            if (matches.length > 0) {
+                textarea.style.display = 'none';
+                
+                const highlightContainer = document.createElement('div');
+                highlightContainer.id = 'highlightContainer';
+                highlightContainer.className = 'container';
+                highlightContainer.style.marginTop = '-20px';
+                highlightContainer.style.padding = '15px';
+                highlightContainer.style.backgroundColor = 'white';
+                highlightContainer.style.borderRadius = '4px';
+                highlightContainer.style.border = '1px solid #ddd';
+                highlightContainer.innerHTML = `
+                    <div style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
+                        <i class="material-icons" style="vertical-align: middle; color: var(--warning);">highlight</i>
+                        Click highlighted phrases to jump to their risk entries
+                    </div>
+                    <div style="white-space: pre-wrap;"></div>
+                `;
+                
+                highlightContainer.querySelector('div:last-child').appendChild(fragment);
+                textarea.parentNode.insertBefore(highlightContainer, textarea.nextSibling);
+            } else {
+                textarea.style.display = 'block';
+            }
+        }
+        
+        function highlightRiskInText(matchIndex) {
+            // Remove active class from all highlights
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add active class to corresponding highlight
+            const highlights = document.querySelectorAll('.highlight');
+            if (highlights.length > matchIndex) {
+                highlights[matchIndex].classList.add('active');
+                highlights[matchIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        
+        function copyResults() {
+            // Check if we have uploaded files or just a single transcript
+            const hasMultipleFiles = uploadedFiles.length > 0;
+            let allRiskItems = [];
+            
+            if (hasMultipleFiles) {
+                // Combine risks from all files
+                uploadedFiles.forEach(file => {
+                    allRiskItems = allRiskItems.concat(file.risks);
+                });
+            } else {
+                // Get risks from current single transcript
+                const riskElements = document.querySelectorAll('.risk-item');
+                riskElements.forEach(item => {
+                    allRiskItems.push({
+                        phrase: item.querySelector('.risk-phrase').textContent,
+                        time: item.querySelector('.risk-time')?.textContent || 'no timestamp'
+                    });
+                });
+            }
+
+            if (allRiskItems.length === 0) {
+                alert('No risks found to copy');
+                return;
+            }
+            
+            // Format just the risk items
+            let textToCopy = '';
+            allRiskItems.forEach(item => {
+                textToCopy += `⚠️ "${item.phrase}" at [${item.time}]\n`;
+            });
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="material-icons">check</i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+// Enhanced double click to scroll to top/bottom feature
+document.addEventListener('dblclick', function(e) {
+    // List of elements to ignore
+    const ignoreElements = ['BUTTON', 'A', 'INPUT', 'TEXTAREA', 'LABEL', 'I', 'SPAN', 'DIV'];
+    
+    // Check if clicked element or any of its parents should be ignored
+    let shouldIgnore = false;
+    let target = e.target;
+    
+    while (target && target !== document.body) {
+        if (ignoreElements.includes(target.tagName) || 
+            target.classList.contains('risk-item') || 
+            target.classList.contains('file-item')) {
+            shouldIgnore = true;
+            break;
+        }
+        target = target.parentElement;
+    }
+    
+    if (shouldIgnore) return;
+
+    // Check if click is outside main containers or on body background
+    const mainContainers = document.querySelectorAll('.container');
+    const clickedOnBackground = e.target === document.body || 
+                              e.target === document.documentElement ||
+                              !Array.from(mainContainers).some(container => container.contains(e.target));
+
+    if (clickedOnBackground) {
+        const scrollPosition = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollThreshold = 150; // Increased threshold
+
+        // If near bottom (within threshold), scroll to top
+        if (scrollPosition + windowHeight >= documentHeight - scrollThreshold) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } 
+        // If near top (within threshold), scroll to bottom
+        else if (scrollPosition <= scrollThreshold) {
+            window.scrollTo({
+                top: documentHeight,
+                behavior: 'smooth'
+            });
+        }
+        // In middle - scroll to whichever end is closer
+        else {
+            const distanceToTop = scrollPosition;
+            const distanceToBottom = documentHeight - (scrollPosition + windowHeight);
+            
+            window.scrollTo({
+                top: distanceToTop < distanceToBottom ? 0 : documentHeight,
+                behavior: 'smooth'
+            });
+        }
+    }
+}); </script>
+</body>
+</html>
