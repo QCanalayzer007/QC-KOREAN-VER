@@ -16,7 +16,7 @@
         }
         
         body {
-        background-image: url('https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg');
+            background-image: url('https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -25,7 +25,6 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            
         }
         
         .header {
@@ -115,7 +114,15 @@
             justify-content: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+        .expand-transcript-container .btn {
+    background-color: var(--dark-gray) !important;
+    margin: 0 auto;
+}
+
+.expand-transcript-container .btn:hover {
+    background-color: var(--primary) !important;
+    transform: translateY(-2px);
+}
         .btn:hover {
             background-color: #008a91;
             transform: translateY(-2px);
@@ -509,27 +516,31 @@
         .file-item {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: rgba(0, 0, 0, 0.02);
             border-radius: 4px;
-            margin-bottom: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
             transition: all 0.2s;
         }
-        
+
         .file-item:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 173, 181, 0.05);
+            border-color: rgba(0, 173, 181, 0.2);
         }
-        
+
         .file-item.active {
             background-color: rgba(0, 173, 181, 0.1);
             border-left: 3px solid var(--primary);
         }
-        
+
         .file-name {
             flex: 1;
             margin-left: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 14px;
         }
         
         .file-remove {
@@ -589,6 +600,90 @@
             to { opacity: 0; }
         }
         
+ #themeToggleContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    background: var(--light);
+    padding: 6px 12px;
+    border-radius: 25px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s;
+}
+
+.theme-toggle input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.theme-toggle input[type="checkbox"]::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle input[type="checkbox"]:checked {
+    background: var(--primary);
+}
+
+.theme-toggle input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+}
+
+.theme-toggle .label-text {
+    font-size: 20px;
+    margin-left: 10px;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+}
+/* 🌙 Dark mode - Comfortable appearance for transcript */
+.dark-transcript #highlightContainer,
+.dark-transcript #transcriptInput {
+    
+    background-color: #1e1e2e !important;  /* deep, soft navy blue */
+    color: #e0e0e0 !important;             /* soft light gray */
+    border-color: #444 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Risk highlights in dark mode */
+.dark-transcript .highlight {
+    background-color: #ff6f61;    /* bright coral red */
+    color: #fff;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+/* Hover and active states */
+.dark-transcript .highlight:hover,
+.dark-transcript .highlight.active {
+    background-color: #ff3b30;   /* brighter red on hover */
+    color: #ffffff;
+    text-shadow: 0 0 2px #fff;
+}
+
         @media (max-width: 768px) {
             .stat-box {
                 min-width: 50%;
@@ -607,13 +702,88 @@
                 justify-content: center;
             }
         }
+        #languageSwitcher {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 8px 10px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(6px);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 4px 6px;
+    border-radius: 20px;
+}
+
+.lang-option img {
+    width: 20px;
+    height: auto;
+    margin-right: 6px;
+    border-radius: 3px;
+}
+
+.lang-option span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.lang-option:hover {
+    background-color: var(--primary);
+}
+
+.lang-option:hover span {
+    color: #fff;
+}
+
+.lang-option:hover img {
+    filter: brightness(1.1);
+}
+
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+<!-- toggle-->
+<div id="themeToggleContainer">
+  <label class="theme-toggle">
+    <input type="checkbox" id="themeToggle">
+    <span class="slider"></span>
+    <span class="label-text">
+      <i class="material-icons" id="themeIcon">dark_mode</i>
+    </span>
+  </label>
+</div>
+    <div id="languageSwitcher">
+  <div class="lang-option" onclick="switchLanguage('en')">
+    <img src="https://flagcdn.com/w40/gb.png" alt="English">
+    <span>EN</span>
+  </div>
+  <div class="lang-option" onclick="switchLanguage('jp')">
+    <img src="https://flagcdn.com/w40/jp.png" alt="Japanese">
+    <span>JP</span>
+  </div>
+  <div class="lang-option" onclick="switchLanguage('kr')">
+    <img src="https://flagcdn.com/w40/kr.png" alt="Korean">
+    <span>KR</span>
+  </div>
+</div>
+
+
     <div class="container">
         <div class="header">
-            <h1>QC Team - Transcript Analyzer (Korean ver.)</h1>
+            <h1>QC Team - Transcript Analyzer (KR ver.) <img src="https://flagcdn.com/w40/kr.png" alt="Korean"></h1>
         </div>
         
         <div>
@@ -679,8 +849,8 @@
     <audio id="checkSound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3"></audio>
 
     <script>
-        // Enhanced risk phrases list
-        const riskyPhrases = [
+        // Enhanced risk phrases list (add your full list here)
+       const riskyPhrases = [
   "사무실",
   "은행",
   "커미션",
@@ -697,9 +867,8 @@
   "두바이에 사무실",
   "수익이 생길 수 있어요",
   "수익을 얻으시는 있고",
-  "위험성이 없는"
+  "위험성이 없는","알아서","프로그램만 시작","한번 시작 돌려주셔야 되고요","자동 시스템","자동 프로그램","알아서 하는 거예요","얻으실 수 있어요","최소 수익","계속 얻으실 수 있어요","계속 수익  얻으실 수 있어요","계속 수익 벌 수 있어요","벌 수 있어요","큰 수익", 
 ];
-
         
         // Store uploaded files and their content
         const uploadedFiles = [];
@@ -707,33 +876,62 @@
         const checkSound = document.getElementById('checkSound');
         const completionMessage = document.getElementById('completionMessage');
         
-        // Initialize file upload
-        document.getElementById('fileUpload').addEventListener('change', function(e) {
+        // Initialize file upload with order preservation
+        document.getElementById('fileUpload').addEventListener('change', async function(e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
             
-            files.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    uploadedFiles.push({
-                        name: file.name,
-                        content: event.target.result,
-                        risks: [],
-                        checkedRisks: [] // Track which risks have been checked
+            // Show loading state
+            const uploadLabel = document.getElementById('fileUploadLabel');
+            const originalLabelContent = uploadLabel.innerHTML;
+            uploadLabel.innerHTML = `<i class="material-icons">hourglass_empty</i> Processing ${files.length} files...`;
+            uploadLabel.style.pointerEvents = 'none';
+            
+            try {
+                // Process files sequentially to maintain order
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Skip if file already exists
+                    if (uploadedFiles.some(f => f.name === file.name)) continue;
+                    
+                    // Update loading status
+                    uploadLabel.innerHTML = `<i class="material-icons">hourglass_empty</i> Processing ${i+1}/${files.length}: ${file.name}`;
+                    
+                    // Read file content with Promise
+                    const fileContent = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = event => resolve(event.target.result);
+                        reader.onerror = error => reject(error);
+                        reader.readAsText(file);
                     });
                     
-                    if (index === files.length - 1) {
-                        updateFileList();
-                        if (uploadedFiles.length === files.length) {
-                            // Automatically load first file
-                            loadFile(0);
-                        }
-                    }
-                };
-                reader.readAsText(file);
-            });
+                    // Add to uploaded files array
+                    uploadedFiles.push({
+                        name: file.name,
+                        content: fileContent,
+                        risks: [],
+                        checkedRisks: []
+                    });
+                }
+                
+                // Update UI
+                updateFileList();
+                if (uploadedFiles.length > 0) {
+                    loadFile(0);
+                }
+                
+            } catch (error) {
+                console.error('Error reading files:', error);
+                alert('Error reading one or more files. Please try again.');
+            } finally {
+                // Reset upload label and input
+                uploadLabel.innerHTML = originalLabelContent;
+                uploadLabel.style.pointerEvents = '';
+                document.getElementById('fileUpload').value = ''; // Reset input to allow adding more files
+            }
         });
-        
+
         // Drag and drop functionality
         const fileUploadLabel = document.getElementById('fileUploadLabel');
         
@@ -766,10 +964,19 @@
         
         function handleDrop(e) {
             const dt = e.dataTransfer;
-            const files = dt.files;
-            document.getElementById('fileUpload').files = files;
+            const files = Array.from(dt.files);
+            
+            // Create a new DataTransfer object to maintain file order
+            const dataTransfer = new DataTransfer();
+            files.forEach(file => dataTransfer.items.add(file));
+            
+            // Assign to file input
+            const fileInput = document.getElementById('fileUpload');
+            fileInput.files = dataTransfer.files;
+            
+            // Trigger change event
             const event = new Event('change');
-            document.getElementById('fileUpload').dispatchEvent(event);
+            fileInput.dispatchEvent(event);
         }
         
         function updateFileList() {
@@ -787,6 +994,7 @@
                 const fileElement = document.createElement('div');
                 fileElement.className = `file-item ${index === currentFileIndex ? 'active' : ''}`;
                 fileElement.innerHTML = `
+                    <span style="min-width: 25px; color: var(--dark-gray);">${index + 1}.</span>
                     <i class="material-icons">description</i>
                     <div class="file-name">${file.name}</div>
                     <div class="file-remove" onclick="removeFile(${index}, event)">
@@ -887,29 +1095,34 @@
             }));
             
             // Process matches
-            if (matches.length === 0) {
-                riskList.innerHTML = `
-                    <div class="no-risks">
-                        <i class="material-icons">check_circle</i>
-                        <div>No risky phrases detected in this transcript</div>
-                    </div>
-                `;
-                document.getElementById('totalRisks').textContent = '0';
-                document.getElementById('uniqueRisks').textContent = '0';
-                document.getElementById('firstRiskTime').textContent = '--:--:--';
-                document.getElementById('lastRiskTime').textContent = '--:--:--';
-                resultsContainer.style.display = 'block';
-                
-                // Store empty risks for this file
-                if (uploadedFiles.length > 0) {
-                    uploadedFiles[currentFileIndex].risks = [];
-                    uploadedFiles[currentFileIndex].checkedRisks = [];
-                    saveCheckedState();
-                }
-                
-                btn.classList.remove('analyzing');
-                return;
-            }
+           if (matches.length === 0) {
+    riskList.innerHTML = `
+        <div class="no-risks">
+            <i class="material-icons">check_circle</i>
+            <div>No risky phrases detected in this transcript</div>
+        </div>
+        <div class="expand-transcript-container" style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="showTranscript()" style="background-color: var(--dark-gray);">
+                <i class="material-icons">visibility</i> Show Transcript
+            </button>
+        </div>
+    `;
+    document.getElementById('totalRisks').textContent = '0';
+    document.getElementById('uniqueRisks').textContent = '0';
+    document.getElementById('firstRiskTime').textContent = '--:--:--';
+    document.getElementById('lastRiskTime').textContent = '--:--:--';
+    resultsContainer.style.display = 'block';
+    
+    // Store empty risks for this file
+    if (uploadedFiles.length > 0) {
+        uploadedFiles[currentFileIndex].risks = [];
+        uploadedFiles[currentFileIndex].checkedRisks = [];
+        saveCheckedState();
+    }
+    
+    btn.classList.remove('analyzing');
+    return;
+}
             
             // Process and deduplicate matches
             const uniquePhrases = new Set();
@@ -1123,83 +1336,101 @@
             document.getElementById('resultsContainer').style.display = 'block';
         }
         
-        function highlightRisksInTranscript(riskItems) {
-            const textarea = document.getElementById('transcriptInput');
-            const text = textarea.value;
-            const regex = new RegExp(riskyPhrases.join("|"), "gi");
+       function highlightRisksInTranscript(riskItems) {
+    const textarea = document.getElementById('transcriptInput');
+    const text = textarea.value;
+    
+    // Remove any existing highlight container
+    const existingHighlight = document.getElementById('highlightContainer');
+    if (existingHighlight) {
+        existingHighlight.remove();
+    }
+    
+    // If no risks and no text, return early
+    if ((!riskItems || riskItems.length === 0) && !text) return;
+    
+    // Create a document fragment to work with
+    const fragment = document.createElement('div');
+    
+    // If we have risks, process them
+    if (riskItems && riskItems.length > 0) {
+        const regex = new RegExp(riskyPhrases.join("|"), "gi");
+        let lastIndex = 0;
+        const matches = [...text.matchAll(regex)];
+        
+        matches.forEach((match, matchIndex) => {
+            // Add text before match
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
             
-            // Remove any existing highlight container
-            const existingHighlight = document.getElementById('highlightContainer');
-            if (existingHighlight) {
-                existingHighlight.remove();
-            }
-            
-            // Create a document fragment to work with
-            const fragment = document.createElement('div');
-            let lastIndex = 0;
-            const matches = [...text.matchAll(regex)];
-            
-            matches.forEach((match, matchIndex) => {
-                // Add text before match
-                fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+            // Add highlighted match
+            const highlight = document.createElement('span');
+            highlight.className = 'highlight';
+            highlight.textContent = match[0];
+            highlight.onclick = () => {
+                // Remove active class from all highlights
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('active');
+                });
+                // Add active class to clicked highlight
+                highlight.classList.add('active');
                 
-                // Add highlighted match
-                const highlight = document.createElement('span');
-                highlight.className = 'highlight';
-                highlight.textContent = match[0];
-                highlight.onclick = () => {
-                    // Remove active class from all highlights
-                    document.querySelectorAll('.highlight').forEach(el => {
-                        el.classList.remove('active');
-                    });
-                    // Add active class to clicked highlight
-                    highlight.classList.add('active');
-                    
-                    // Find corresponding risk item and scroll to it
-                    const riskItem = document.querySelectorAll('.risk-item')[matchIndex];
-                    if (riskItem) {
-                        riskItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        // Flash the risk item
-                        riskItem.style.backgroundColor = 'rgba(0, 173, 181, 0.2)';
-                        setTimeout(() => {
-                            riskItem.style.backgroundColor = '';
-                        }, 2000);
-                    }
-                };
-                fragment.appendChild(highlight);
-                
-                lastIndex = match.index + match[0].length;
-            });
+                // Find corresponding risk item and scroll to it
+                const riskItem = document.querySelectorAll('.risk-item')[matchIndex];
+                if (riskItem) {
+                    riskItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // Flash the risk item
+                    riskItem.style.backgroundColor = 'rgba(0, 173, 181, 0.2)';
+                    setTimeout(() => {
+                        riskItem.style.backgroundColor = '';
+                    }, 2000);
+                }
+            };
+            fragment.appendChild(highlight);
             
-            // Add remaining text
-            fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-            
-            // Only update if we actually made changes
-            if (matches.length > 0) {
-                textarea.style.display = 'none';
-                
-                const highlightContainer = document.createElement('div');
-                highlightContainer.id = 'highlightContainer';
-                highlightContainer.className = 'container';
-                highlightContainer.style.marginTop = '-20px';
-                highlightContainer.style.padding = '15px';
-                highlightContainer.style.backgroundColor = 'white';
-                highlightContainer.style.borderRadius = '4px';
-                highlightContainer.style.border = '1px solid #ddd';
-                highlightContainer.innerHTML = `
-                    <div style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
-                        <i class="material-icons" style="vertical-align: middle; color: var(--warning);">highlight</i>
-                        Click highlighted phrases to jump to their risk entries
-                    </div>
-                    <div style="white-space: pre-wrap;"></div>
-                `;
-                
-                highlightContainer.querySelector('div:last-child').appendChild(fragment);
-                textarea.parentNode.insertBefore(highlightContainer, textarea.nextSibling);
-            } else {
-                textarea.style.display = 'block';
-            }
+            lastIndex = match.index + match[0].length;
+        });
+        
+        // Add remaining text
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+    } else {
+        // Just show the plain text if no risks
+        fragment.appendChild(document.createTextNode(text));
+    }
+    
+    // Only update if we have text
+    if (text) {
+        textarea.style.display = 'none';
+        
+        const highlightContainer = document.createElement('div');
+        highlightContainer.id = 'highlightContainer';
+        highlightContainer.className = 'container';
+        highlightContainer.style.marginTop = '-20px';
+        highlightContainer.style.padding = '15px';
+        highlightContainer.style.backgroundColor = 'white';
+        highlightContainer.style.borderRadius = '4px';
+        highlightContainer.style.border = '1px solid #ddd';
+        
+        // Only show the helper text if we have risks
+        if (riskItems && riskItems.length > 0) {
+            highlightContainer.innerHTML = `
+                <div style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
+                    <i class="material-icons" style="vertical-align: middle; color: var(--warning);">highlight</i>
+                    Click highlighted phrases to jump to their risk entries
+                </div>
+                <div style="white-space: pre-wrap;"></div>
+            `;
+        } else {
+            highlightContainer.innerHTML = `
+                <div style="white-space: pre-wrap;"></div>
+            `;
         }
+        
+        highlightContainer.querySelector('div:last-child').appendChild(fragment);
+        textarea.parentNode.insertBefore(highlightContainer, textarea.nextSibling);
+    } else {
+        textarea.style.display = 'block';
+    }
+}
         
         function highlightRiskInText(matchIndex) {
             // Remove active class from all highlights
@@ -1257,64 +1488,133 @@
                 }, 2000);
             });
         }
-// Enhanced double click to scroll to top/bottom feature
-document.addEventListener('dblclick', function(e) {
-    // List of elements to ignore
-    const ignoreElements = ['BUTTON', 'A', 'INPUT', 'TEXTAREA', 'LABEL', 'I', 'SPAN', 'DIV'];
-    
-    // Check if clicked element or any of its parents should be ignored
-    let shouldIgnore = false;
-    let target = e.target;
-    
-    while (target && target !== document.body) {
-        if (ignoreElements.includes(target.tagName) || 
-            target.classList.contains('risk-item') || 
-            target.classList.contains('file-item')) {
-            shouldIgnore = true;
-            break;
-        }
-        target = target.parentElement;
-    }
-    
-    if (shouldIgnore) return;
 
-    // Check if click is outside main containers or on body background
-    const mainContainers = document.querySelectorAll('.container');
-    const clickedOnBackground = e.target === document.body || 
-                              e.target === document.documentElement ||
-                              !Array.from(mainContainers).some(container => container.contains(e.target));
-
-    if (clickedOnBackground) {
-        const scrollPosition = window.scrollY;
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        const scrollThreshold = 150; // Increased threshold
-
-        // If near bottom (within threshold), scroll to top
-        if (scrollPosition + windowHeight >= documentHeight - scrollThreshold) {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        } 
-        // If near top (within threshold), scroll to bottom
-        else if (scrollPosition <= scrollThreshold) {
-            window.scrollTo({
-                top: documentHeight,
-                behavior: 'smooth'
-            });
-        }
-        // In middle - scroll to whichever end is closer
-        else {
-            const distanceToTop = scrollPosition;
-            const distanceToBottom = documentHeight - (scrollPosition + windowHeight);
+        // Enhanced double click to scroll to top/bottom feature
+        document.addEventListener('dblclick', function(e) {
+            // List of elements to ignore
+            const ignoreElements = ['BUTTON', 'A', 'INPUT', 'TEXTAREA', 'LABEL', 'I', 'SPAN', 'DIV'];
             
-            window.scrollTo({
-                top: distanceToTop < distanceToBottom ? 0 : documentHeight,
-                behavior: 'smooth'
-            });
-        }
+            // Check if clicked element or any of its parents should be ignored
+            let shouldIgnore = false;
+            let target = e.target;
+            
+            while (target && target !== document.body) {
+                if (ignoreElements.includes(target.tagName) || 
+                    target.classList.contains('risk-item') || 
+                    target.classList.contains('file-item')) {
+                    shouldIgnore = true;
+                    break;
+                }
+                target = target.parentElement;
+            }
+            
+            if (shouldIgnore) return;
+
+            // Check if click is outside main containers or on body background
+            const mainContainers = document.querySelectorAll('.container');
+            const clickedOnBackground = e.target === document.body || 
+                                      e.target === document.documentElement ||
+                                      !Array.from(mainContainers).some(container => container.contains(e.target));
+
+            if (clickedOnBackground) {
+                const scrollPosition = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const scrollThreshold = 150; // Increased threshold
+
+                // If near bottom (within threshold), scroll to top
+                if (scrollPosition + windowHeight >= documentHeight - scrollThreshold) {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } 
+                // If near top (within threshold), scroll to bottom
+                else if (scrollPosition <= scrollThreshold) {
+                    window.scrollTo({
+                        top: documentHeight,
+                        behavior: 'smooth'
+                    });
+                }
+                // In middle - scroll to whichever end is closer
+                else {
+                    const distanceToTop = scrollPosition;
+                    const distanceToBottom = documentHeight - (scrollPosition + windowHeight);
+                    
+                    window.scrollTo({
+                        top: distanceToTop < distanceToBottom ? 0 : documentHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+        // Toggle dark mode for transcript only
+// Dark mode toggle with localStorage
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('darkTranscript');
+if (savedTheme === 'true') {
+    document.body.classList.add('dark-transcript');
+    themeToggle.checked = true;
+    themeIcon.textContent = 'dark_mode';
+}
+
+themeToggle.addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('dark-transcript');
+        themeIcon.textContent = 'dark_mode';
+        localStorage.setItem('darkTranscript', 'true');
+    } else {
+        document.body.classList.remove('dark-transcript');
+        themeIcon.textContent = 'light_mode';
+        localStorage.setItem('darkTranscript', 'false');
     }
-}); </script>
+});
+function switchLanguage(lang) {
+    if (lang === 'en') {
+        window.location.href = 'https://qcanalayzer007.github.io/QC-ENG-/';
+    } else if (lang === 'jp') {
+        window.location.href = 'https://qcanalayzer007.github.io/QC-JP/';
+    } else if (lang === 'kr') {
+        window.location.href = 'https://qcanalayzer007.github.io/QC-KR/';
+    }
+}
+function showTranscript() {
+    const transcript = document.getElementById('transcriptInput').value.trim();
+    if (!transcript) return;
+    
+    // Create a temporary array to trigger highlighting
+    const tempRisks = [
+        {
+            phrase: "",
+            time: null,
+            index: 0,
+            matchIndex: 0
+        }
+    ];
+    
+    highlightRisksInTranscript(tempRisks);
+    
+    // Scroll to the transcript
+    const highlightContainer = document.getElementById('highlightContainer');
+    if (highlightContainer) {
+        highlightContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Remove the button after showing
+    const expandContainer = document.querySelector('.expand-transcript-container');
+    if (expandContainer) {
+        expandContainer.remove();
+    }
+}
+
+    </script>
 </body>
 </html>
+
+
+
+
+
